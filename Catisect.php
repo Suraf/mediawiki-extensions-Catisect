@@ -22,3 +22,6 @@ $wgHooks['ParserBeforeInternalParse'][] = 'IntersectionPage::onParserBeforeInter
 $dir = dirname(__FILE__) . '/';
 $wgAutoloadClasses['IntersectionPage'] = $dir . 'IntersectionPage.php';
 $wgExtensionMessagesFiles['Catisect'] = $dir . 'Catisect.i18n.php';
+
+$wgMessagesDirs['Catisect']					= "{$extDir}/i18n";
+?>
