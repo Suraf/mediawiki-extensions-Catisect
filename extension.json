@@ -1,0 +1,41 @@
+{
+	"name": "Category Intersection",
+	"version": "1.0.0",
+	"author": "foxlit",
+	"descriptionmsg": "catisect-description",
+	"type": "other",
+	"MessagesDirs": {
+		"Catisect": [
+			"/i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"IntersectionPage": "classes/IntersectionPage.php",
+		"CatisectHooks": "Catisect.hooks.php"
+	},
+	"Hooks": {
+		"ArticleFromTitle": [
+			"IntersectionPage::onArticleFromTitle"
+		],
+		"LinkBegin": [
+			"IntersectionPage::onLinkBegin"
+		],
+		"SkinTemplateNavigation": [
+			"IntersectionPage::onSkinTemplateNavigation"
+		],
+		"userCan": [
+			"IntersectionPage::onUserCan"
+		],
+		"ParserBeforeInternalParse": [
+			"IntersectionPage::onParserBeforeInternalParse"
+		]
+	},
+	"config": {
+		"ExtraNamespaces": {
+			"600": "Intersection",
+			"601": "Intersection_talk"
+		}
+	},
+	"callback": "CatisectHooks::onRegistration",
+	"manifest_version": 1
+}

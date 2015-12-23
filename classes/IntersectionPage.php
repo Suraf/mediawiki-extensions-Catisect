@@ -2,13 +2,15 @@
 class IntersectionPage extends Article {
 	public $limit = 200;
 	public $minColumnSize = 5;
-	
+
 	private $collation;
-	
+
 	function __construct( Title $title) {
 		parent::__construct($title);
 		$this->collation = Collation::singleton();
 	}
+
+
 	public function showMissingArticle() {
 		if (self::isAutoIntersection($this->getTitle())) {
 			$this->getContext()->getOutput()->addWikiText( wfMsg('intersection-notext') );
@@ -16,7 +18,7 @@ class IntersectionPage extends Article {
 			parent::showMissingArticle();
 		}
 	}
-	
+
 	function view() {
 		$request = $this->getContext()->getRequest();
 		$diff = $request->getVal( 'diff' );
@@ -46,10 +48,10 @@ class IntersectionPage extends Article {
 					$this->getContext()->getOutput()->setPageTitle(wfMsg('intersection-title'));
 				}
 			}
-		}		
+		}
 	}
-	
-	function viewIntersection(Title $title, $categories, OutputPage $output, WebRequest $request) {		
+
+	function viewIntersection(Title $title, $categories, OutputPage $output, WebRequest $request) {
 		$sub = array();
 		foreach ($categories as $k => $v) {
 			$t = Title::newFromText($v, NS_CATEGORY);
@@ -64,7 +66,7 @@ class IntersectionPage extends Article {
 		$output->setSubTitle('<span id="intersection-subtitle">'.wfMsg('intersection-subtitle', implode(', ', $sub)).'</span>');
 
 		$dbr = wfGetDB(DB_SLAVE);
-		
+
 		$titleKeys = array();
 		foreach ($categories as $c) $titleKeys[] = $c->getDBkey();
 		$smallestCat = $dbr->selectRow('category', 'cat_title', array('cat_title' => $titleKeys), __METHOD__, array('ORDER BY' => 'cat_pages ASC', 'LIMIT' => 1));
@@ -78,7 +80,7 @@ class IntersectionPage extends Article {
 				}
 			}
 		}
-		
+
 		$tables = array('c0' => 'categorylinks');
 		$conds = array('c0.cl_to' => $categories[0]->getDBkey());
 		$opts = array('LIMIT' => $this->limit+1);
@@ -87,7 +89,7 @@ class IntersectionPage extends Article {
 			$conds['c'.$i.'.cl_to'] = $categories[$i]->getDBkey();
 			$conds[] = 'c'.$i.'.cl_from = c0.cl_from' ;
 		}
-		
+
 		$from = $request->getVal('from');
 		$until = $from == null ? $request->getVal('until') : null;
 		$flip = false;
@@ -99,20 +101,20 @@ class IntersectionPage extends Article {
 			$opts['ORDER BY'] = 'c0.cl_sortkey DESC';
 			$flip = true;
 		}
-			
+
 		$keys = array(); $pages = array(); $rows = array(); $i = 0; $moreKey = null;
 		$qs = microtime(true);
 
 		foreach($dbr->select($tables, array('c0.cl_sortkey', 'c0.cl_from', 'c0.cl_sortkey_prefix', 'c0.cl_collation'), $conds, __METHOD__, $opts) as $row) {
 			$rows[$row->cl_from] = $row;
-			$pages[$i++] = $row->cl_from;			
+			$pages[$i++] = $row->cl_from;
 			if ($i > $this->limit) {
 				$moreKey = $row->cl_from;
 			}
 		}
 		$qt = microtime(true)-$qs;
 		$output->addHTML('<!-- Intersection time: '.$qt.' sec. -->');
-		
+
 		$navLinks = '';
 		$pages2 = Title::newFromIDs($pages);
 		foreach ($pages2 as $k => $page) {
@@ -125,7 +127,7 @@ class IntersectionPage extends Article {
 				$keys[$pid] = $key;
 			}
 		}
-		
+
 		if ($moreKey != null) {
 			$navLinks = '('.Linker::linkKnown($title, ($flip ? 'previous ' : 'next ').$this->limit, array(), array(($flip ? 'until' : 'from') => $moreKey)).')';
 		}
@@ -136,16 +138,16 @@ class IntersectionPage extends Article {
 				$navLinks = '('.Linker::linkKnown($title, 'previous '.$this->limit, array(), array('until' => $keys[$pages[0]])) .') ' . $navLinks;
 			}
 		}
-		
+
 		$this->generatePageList($output, $pages2, $keys, $navLinks);
 		return true;
 	}
-	
+
 	function generatePageList(OutputPage $output, $pages, $keys, $nav) {
 		$ofc = null;
-		
+
 		usort($pages, function($a, $b) use ($keys) { return strnatcmp($keys[$a->getArticleID()], $keys[$b->getArticleID()]); });
-		
+
 		$c = count($pages);
 		if ($c == 0) {
 			$output->addHTML('<h2>'.wfMsg('intersection-header').'</h2><p>'.wfMsg('intersection-empty').'</p>');
@@ -168,13 +170,13 @@ class IntersectionPage extends Article {
 		$out .= '</td></tr></table>';
 		$output->addHTML('<h2>'.wfMsg('intersection-header').'</h2>'.($nav ? '<p>'.$nav.'</p>' : '').$out);
 	}
-	
+
 	public static function onParserBeforeInternalParse( &$parser, &$text, &$strip_state ) {
 		if ($parser->getTitle()->getNamespace() == NS_INTERSECTION) {
 			if (preg_match('/^[\r\n]*#INTERSECT\s+(.+)[\n]*/', $text, $matches)) {
 				$text = substr($text, strlen($matches[0]));
 				preg_match_all('/\[\[([^|\[\]]+)\]\]/', $matches[1], $catTitles);
-				
+
 				$categories = '';
 				foreach ($catTitles[1] as $ttext) {
 					$title = Title::newFromText($ttext, NS_CATEGORY);
@@ -182,13 +184,13 @@ class IntersectionPage extends Article {
 						$categories .= ($categories == '' ? '' : '::').$title->getText();
 					}
 				}
-				
+
 				$parser->getOutput()->setProperty('intersect', $categories);
 			}
 		}
 		return true;
 	}
-	
+
 	public static function onArticleFromTitle(&$title, &$page) {
 		if ($title->getNamespace() == NS_INTERSECTION) {
 			$page = new IntersectionPage($title);
@@ -196,12 +198,12 @@ class IntersectionPage extends Article {
 		}
 		return true;
 	}
-	
+
 	public static function isAutoIntersection(Title $t) {
 		$ns = $t->getNamespace();
 		return ($ns == NS_INTERSECTION || $ns == NS_INTERSECTION_TALK) && strpos($t->getText(),'::') !== FALSE;
 	}
-	
+
 	public static function onLinkBegin($dummy, $target, &$html, &$customAttribs, &$query, &$options, &$ret) {
 		if (is_object($target) && $target instanceof Title && self::isAutoIntersection($target) ) {
 			if (is_array($options)) {
@@ -214,9 +216,9 @@ class IntersectionPage extends Article {
 				$opt = $options == 'broken' ? 'known' : array('known', $options);
 			}
 		}
-		return true;	
+		return true;
 	}
-	
+
 	public static function onUserCan(Title &$title, User &$user, $action, &$result) {
 		if (self::isAutoIntersection($title) && ($action == 'edit' || $title->getNamespace() == NS_INTERSECTION_TALK)) {
 			$result = false;
@@ -224,15 +226,15 @@ class IntersectionPage extends Article {
 		}
 		return true;
 	}
-	
+
 	public static function onSkinTemplateNavigation(SkinTemplate &$sk, &$content_navigation) {
 		$title = $sk->getRelevantTitle();
-		if (isset($content_navigation['namespaces']) && isset($content_navigation['namespaces']['intersection']) && strpos($title->getText(), '::') !== FALSE) {		
+		if (isset($content_navigation['namespaces']) && isset($content_navigation['namespaces']['intersection']) && strpos($title->getText(), '::') !== FALSE) {
 			$content_navigation['namespaces']['intersection']['class'] = 'selected';
 			$content_navigation['namespaces']['intersection']['href'] = $title->getLocalURL();
 			unset($content_navigation['namespaces']['intersection_talk']);
 		}
 		return true;
 	}
-	
+
 }
