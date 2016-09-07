@@ -13,7 +13,7 @@ class IntersectionPage extends Article {
 
 	public function showMissingArticle() {
 		if (self::isAutoIntersection($this->getTitle())) {
-			$this->getContext()->getOutput()->addWikiText( wfMsg('intersection-notext') );
+			$this->getContext()->getOutput()->addWikiText( wfMessage('intersection-notext') );
 		} else {
 			parent::showMissingArticle();
 		}
@@ -45,7 +45,7 @@ class IntersectionPage extends Article {
 					$this->getContext()->getOutput()->addWikiMsg('intersection-invalid');
 					$this->getContext()->getOutput()->setStatusCode(404);
 				} elseif ($isAuto) {
-					$this->getContext()->getOutput()->setPageTitle(wfMsg('intersection-title'));
+					$this->getContext()->getOutput()->setPageTitle(wfMessage('intersection-title'));
 				}
 			}
 		}
@@ -63,7 +63,7 @@ class IntersectionPage extends Article {
 			}
 		}
 		if (count($categories) <= 1) return false;
-		$output->setSubTitle('<span id="intersection-subtitle">'.wfMsg('intersection-subtitle', implode(', ', $sub)).'</span>');
+		$output->setSubTitle('<span id="intersection-subtitle">'.wfMessage('intersection-subtitle', implode(', ', $sub)).'</span>');
 
 		$dbr = wfGetDB(DB_SLAVE);
 
@@ -150,7 +150,7 @@ class IntersectionPage extends Article {
 
 		$c = count($pages);
 		if ($c == 0) {
-			$output->addHTML('<h2>'.wfMsg('intersection-header').'</h2><p>'.wfMsg('intersection-empty').'</p>');
+			$output->addHTML('<h2>'.wfMessage('intersection-header').'</h2><p>'.wfMessage('intersection-empty').'</p>');
 			return;
 		}
 		$cellMod = max($this->minColumnSize, ceil($c / 3));
@@ -168,7 +168,7 @@ class IntersectionPage extends Article {
 		}
 		if ($ofc != null) $out .= '</ul>';
 		$out .= '</td></tr></table>';
-		$output->addHTML('<h2>'.wfMsg('intersection-header').'</h2>'.($nav ? '<p>'.$nav.'</p>' : '').$out);
+		$output->addHTML('<h2>'.wfMessage('intersection-header').'</h2>'.($nav ? '<p>'.$nav.'</p>' : '').$out);
 	}
 
 	public static function onParserBeforeInternalParse( &$parser, &$text, &$strip_state ) {
