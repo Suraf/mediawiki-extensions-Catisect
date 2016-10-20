@@ -7,7 +7,9 @@ class CatisectHooks {
 	 * @access	public
      * @return	void
      */
-    public static function onRegistration() {
+    static public function onRegistration() {
+		global $wgExtraNamespaces;
+
 		define('NS_INTERSECTION', 600);
 		define('NS_INTERSECTION_TALK', 601);
 

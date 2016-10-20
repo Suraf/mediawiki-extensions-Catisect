@@ -62,14 +62,27 @@ class IntersectionPage extends Article {
 				unset($categories[$k]);
 			}
 		}
-		if (count($categories) <= 1) return false;
-		$output->setSubTitle('<span id="intersection-subtitle">'.wfMessage('intersection-subtitle', implode(', ', $sub)).'</span>');
+
+		if (count($categories) <= 1) {
+			return false;
+		}
+
+		$output->setSubTitle('<span id="intersection-subtitle">'.wfMessage('intersection-subtitle', implode(', ', $sub))->plain().'</span>');
 
 		$dbr = wfGetDB(DB_SLAVE);
 
 		$titleKeys = array();
 		foreach ($categories as $c) $titleKeys[] = $c->getDBkey();
-		$smallestCat = $dbr->selectRow('category', 'cat_title', array('cat_title' => $titleKeys), __METHOD__, array('ORDER BY' => 'cat_pages ASC', 'LIMIT' => 1));
+		$smallestCat = $dbr->selectRow(
+			['category'],
+			['cat_title'],
+			['cat_title' => $titleKeys],
+			__METHOD__,
+			[
+				'ORDER BY' => 'cat_pages ASC',
+				'LIMIT' => 1
+			]
+		);
 		if (is_object($smallestCat)) {
 			foreach ($titleKeys as $k => $t) {
 				if ($t == $smallestCat->cat_title) {
