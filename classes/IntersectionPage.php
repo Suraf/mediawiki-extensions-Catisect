@@ -150,7 +150,7 @@ class IntersectionPage extends Article {
 
 		$c = count($pages);
 		if ($c == 0) {
-			$output->addHTML('<h2>'.wfMessage('intersection-header').'</h2><p>'.wfMessage('intersection-empty').'</p>');
+			$output->addHTML('<h2>'.wfMessage('intersection-header').'</h2><p>'.wfMessage('intersection-empty')->escaped().'</p>');
 			return;
 		}
 		$cellMod = max($this->minColumnSize, ceil($c / 3));
@@ -161,7 +161,7 @@ class IntersectionPage extends Article {
 			if ($ofc == null || $firstChar != $ofc || ($k > 0 && $k % $cellMod == 0)) {
 				$out .= ($ofc == null ? '' : '</ul>');
 				if ($k > 0 && $k % $cellMod == 0) $out .= '</td><td>';
-				$out .= '<h3>'.htmlspecialchars($firstChar).($firstChar == $ofc ? ' ' . wfMsgHtml( 'listingcontinuesabbrev' ) : '').'</h3><ul>';
+				$out .= '<h3>'.htmlspecialchars($firstChar).($firstChar == $ofc ? ' ' . wfMessage( 'listingcontinuesabbrev' )->escaped() : '').'</h3><ul>';
 				$ofc = $firstChar;
 			}
 			$out .= '<li>'.Linker::linkKnown($page).'</li>';
