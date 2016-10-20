@@ -6,36 +6,20 @@
 	"type": "other",
 	"MessagesDirs": {
 		"Catisect": [
-			"/i18n"
+			"i18n"
 		]
 	},
 	"AutoloadClasses": {
-		"IntersectionPage": "classes/IntersectionPage.php",
-		"CatisectHooks": "Catisect.hooks.php"
-	},
-	"Hooks": {
-		"ArticleFromTitle": [
-			"IntersectionPage::onArticleFromTitle"
-		],
-		"LinkBegin": [
-			"IntersectionPage::onLinkBegin"
-		],
-		"SkinTemplateNavigation": [
-			"IntersectionPage::onSkinTemplateNavigation"
-		],
-		"userCan": [
-			"IntersectionPage::onUserCan"
-		],
-		"ParserBeforeInternalParse": [
-			"IntersectionPage::onParserBeforeInternalParse"
-		]
-	},
-	"config": {
-		"ExtraNamespaces": {
-			"600": "Intersection",
-			"601": "Intersection_talk"
-		}
+		"CatisectHooks": "Catisect.hooks.php",
+		"IntersectionPage": "classes/IntersectionPage.php"
 	},
 	"callback": "CatisectHooks::onRegistration",
+	"Hooks": {
+		"ArticleFromTitle": "IntersectionPage::onArticleFromTitle",
+		"LinkBegin": "IntersectionPage::onLinkBegin",
+		"SkinTemplateNavigation": "IntersectionPage::onSkinTemplateNavigation",
+		"userCan": "IntersectionPage::onUserCan",
+		"ParserBeforeInternalParse": "IntersectionPage::onParserBeforeInternalParse"
+	},
 	"manifest_version": 1
 }

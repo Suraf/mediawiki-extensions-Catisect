@@ -7,7 +7,6 @@ $wgExtensionCredits['other'][] = array(
 	'version' => '1.0.0',
 );
 
-
 define('NS_INTERSECTION', 600);
 define('NS_INTERSECTION_TALK', 601);
 
