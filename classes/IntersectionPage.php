@@ -69,7 +69,7 @@ class IntersectionPage extends Article {
 
 		$output->setSubTitle('<span id="intersection-subtitle">'.wfMessage('intersection-subtitle', implode(', ', $sub))->plain().'</span>');
 
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 
 		$titleKeys = array();
 		foreach ($categories as $c) $titleKeys[] = $c->getDBkey();
