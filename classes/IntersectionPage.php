@@ -13,7 +13,7 @@ class IntersectionPage extends Article {
 
 	public function showMissingArticle() {
 		if (self::isAutoIntersection($this->getTitle())) {
-			$this->getContext()->getOutput()->addWikiText( wfMessage('intersection-notext') );
+			$this->getContext()->getOutput()->addWikiTextAsInterface( wfMessage('intersection-notext') );
 		} else {
 			parent::showMissingArticle();
 		}
