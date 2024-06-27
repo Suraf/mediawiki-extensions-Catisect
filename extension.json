@@ -1,6 +1,6 @@
 {
 	"name": "Category Intersection",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": "foxlit",
 	"descriptionmsg": "catisect-description",
 	"license-name": "GPL-2.0-or-later",
@@ -10,17 +10,21 @@
 			"i18n"
 		]
 	},
-	"AutoloadClasses": {
-		"CatisectHooks": "Catisect.hooks.php",
-		"IntersectionPage": "classes/IntersectionPage.php"
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\Catisect\\": "src/"
 	},
-	"callback": "CatisectHooks::onRegistration",
+	"callback": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onRegistration",
+	"HookHandlers": {
+		"Catisect": {
+			"class": "MediaWiki\\Extension\\Catisect\\CatisectHooks"
+		}
+	},
 	"Hooks": {
-		"ArticleFromTitle": "IntersectionPage::onArticleFromTitle",
-		"LinkBegin": "IntersectionPage::onLinkBegin",
-		"SkinTemplateNavigation": "IntersectionPage::onSkinTemplateNavigation",
-		"userCan": "IntersectionPage::onUserCan",
-		"ParserBeforeInternalParse": "IntersectionPage::onParserBeforeInternalParse"
+		"ArticleFromTitle": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onArticleFromTitle",
+		"LinkBegin": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onLinkBegin",
+		"SkinTemplateNavigation": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onSkinTemplateNavigation",
+		"userCan": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onUserCan",
+		"ParserBeforeInternalParse": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onParserBeforeInternalParse"
 	},
-	"manifest_version": 1
+	"manifest_version": 2
 }
