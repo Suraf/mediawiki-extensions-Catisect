@@ -5,6 +5,9 @@
 	"descriptionmsg": "catisect-description",
 	"license-name": "GPL-2.0-or-later",
 	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.43.0"
+	},
 	"MessagesDirs": {
 		"Catisect": [
 			"i18n"
@@ -25,15 +28,16 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\Catisect\\": "src/"
 	},
-	"HookHandlers": {
-		"Catisect": {
-			"class": "MediaWiki\\Extension\\Catisect\\CatisectHooks"
+	"config": {
+		"CatisectMaxCategories": {
+			"value": 10,
+			"description": "Maximum number of distinct categories a single intersection may combine."
 		}
 	},
 	"Hooks": {
 		"ArticleFromTitle": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onArticleFromTitle",
-		"LinkBegin": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onLinkBegin",
-		"SkinTemplateNavigation": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onSkinTemplateNavigation",
+		"TitleIsAlwaysKnown": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onTitleIsAlwaysKnown",
+		"SkinTemplateNavigation::Universal": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onSkinTemplateNavigationUniversal",
 		"userCan": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onUserCan",
 		"ParserBeforeInternalParse": "MediaWiki\\Extension\\Catisect\\CatisectHooks::onParserBeforeInternalParse"
 	},

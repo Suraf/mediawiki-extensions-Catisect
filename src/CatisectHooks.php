@@ -1,16 +1,14 @@
 <?php
 namespace MediaWiki\Extension\Catisect;
 
+// begin wiki.gg: 1.43 compatibility
+use MediaWiki\Linker\LinkTarget;
+// end wiki.gg
 use MediaWiki\Title\Title;
 use MediaWiki\User\User;
 use SkinTemplate;
 
 class CatisectHooks {
-    private static function defineConstantsForIde() {
-		define( 'NS_INTERSECTION', 600 );
-		define( 'NS_INTERSECTION_TALK', 601 );
-	}
-
 	public static function onParserBeforeInternalParse( &$parser, &$text, &$strip_state ) {
 		if ($parser->getTitle()->getNamespace() == NS_INTERSECTION) {
 			if (preg_match('/^[\r\n]*#INTERSECT\s+(.+)[\n]*/', $text, $matches)) {
@@ -25,7 +23,9 @@ class CatisectHooks {
 					}
 				}
 
-				$parser->getOutput()->setProperty('intersect', $categories);
+				// begin wiki.gg: setProperty() was removed in 1.41
+				$parser->getOutput()->setUnsortedPageProperty('intersect', $categories);
+				// end wiki.gg
 			}
 		}
 		return true;
@@ -39,20 +39,13 @@ class CatisectHooks {
 		return true;
 	}
 
-	public static function onLinkBegin($dummy, $target, &$html, &$customAttribs, &$query, &$options, &$ret) {
-		if (is_object($target) && $target instanceof Title && IntersectionPage::isAutoIntersection($target) ) {
-			if (is_array($options)) {
-				if (in_array('broken', $options)) {
-					foreach ($options as $k => $v) if ($v == 'broken') $options[$k] = 'known';
-				} else {
-					$options[] = 'known';
-				}
-			} else {
-				$opt = $options == 'broken' ? 'known' : array('known', $options);
-			}
+	// begin wiki.gg: replaces the LinkBegin hook removed in 1.36; auto-intersection links render as existing
+	public static function onTitleIsAlwaysKnown( LinkTarget $title, &$isKnown ) {
+		if ( IntersectionPage::isAutoIntersection( $title ) ) {
+			$isKnown = true;
 		}
-		return true;
 	}
+	// end wiki.gg
 
 	public static function onUserCan(Title &$title, User &$user, $action, &$result) {
 		if (IntersectionPage::isAutoIntersection($title) && ($action == 'edit' || $title->getNamespace() == NS_INTERSECTION_TALK)) {
@@ -62,7 +55,9 @@ class CatisectHooks {
 		return true;
 	}
 
-	public static function onSkinTemplateNavigation(SkinTemplate &$sk, &$content_navigation) {
+	// begin wiki.gg: SkinTemplateNavigation was removed in 1.41, moved to ::Universal
+	public static function onSkinTemplateNavigationUniversal( SkinTemplate $sk, &$content_navigation ) {
+	// end wiki.gg
 		$title = $sk->getRelevantTitle();
 		if (isset($content_navigation['namespaces']) && isset($content_navigation['namespaces']['intersection']) && strpos($title->getText(), '::') !== FALSE) {
 			$content_navigation['namespaces']['intersection']['class'] = 'selected';
