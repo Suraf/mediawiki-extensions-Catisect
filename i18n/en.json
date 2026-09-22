@@ -8,5 +8,6 @@
 	"intersection-title": "Category Intersection",
 	"intersection-subtitle": "Intersection of $1.",
 	"intersection-header": "Common pages",
-	"intersection-empty": "These categories do not have any pages in common."
+	"intersection-empty": "These categories do not have any pages in common.",
+	"intersection-toomany": "Category intersection supports at most $1 {{PLURAL:$1|category|categories}}."
 }
